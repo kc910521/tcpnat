@@ -1,21 +1,25 @@
 package nat;
 
-import java.io.BufferedReader;
+import vo.ClientInfo;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by robu on 2016/11/30.
  */
-public class Server {
-    public static final int PORT = 12345;//监听的端口号
+public class Server2 {
+    public static final int PORT = 12346;//监听的端口号
+
+    private List<ClientInfo> cinfs = new ArrayList<ClientInfo>();
 
     public static void main(String[] args) {
         System.out.println("服务器启动...\n");
-        Server server = new Server();
+        Server2 server = new Server2();
         server.init();
     }
 
@@ -40,18 +44,17 @@ public class Server {
         }
 
         public void run() {
+            Socket socketC = null;
             try {
                 // 读取客户端A数据
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
                 System.out.print("socket:"+socket.getInetAddress().getHostAddress());
                 // 处理客户端数据
-                System.out.println("客户端发过来的内容:" + clientInputStr);
+                System.out.println("客户端发过来的内容:" + clientInputStr+",then:");
                 // 向客户端回复信息
-                DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                //System.out.print("请输入:\t");
-                // 发送键盘输入的一行
-                //String s = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                socketC = new Socket(Client.IP_ADDR, Server.PORT);
+                DataOutputStream out = new DataOutputStream(socketC.getOutputStream());
                 out.writeUTF(clientInputStr);
                 out.close();
                 input.close();
@@ -61,10 +64,12 @@ public class Server {
                 if (socket != null) {
                     try {
                         //socketPrev = socket;
-                        if (socket != null ){
-                            System.out.println("++++++++++++++++socketPrev close");
-                            socket.close();
-                        }
+                        //if (socketPrev != null && !socketPrev.isClosed()){
+                            //System.out.println("++++++++++++++++socketPrev close");
+                        socketC.close();
+                        socket.close();
+                        //}
+                        //socketPrev = socket;
                         //socket.close();
                     } catch (Exception e) {
                         socket = null;
