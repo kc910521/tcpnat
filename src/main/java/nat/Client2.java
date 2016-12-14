@@ -6,8 +6,7 @@ import java.net.Socket;
 /**
  * Created by robu on 2016/11/30.
  */
-public class Client {
-    public static final String IP_ADDR = "localhost";//服务器地址120.27.46.193
+public class Client2 {
 
     public static void main(String[] args) {
         System.out.println("客户端启动...");
@@ -16,7 +15,7 @@ public class Client {
             Socket socket = null;
             try {
                 //创建一个流套接字并将其连接到指定主机上的指定端口号
-                socket = new Socket(IP_ADDR, Server2.PORT);
+                socket = new Socket(Client.IP_ADDR, Server2.PORT);
                 socket.setKeepAlive(true);
                 //读取服务器端数据
                 DataInputStream input = new DataInputStream(socket.getInputStream());

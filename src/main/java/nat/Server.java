@@ -41,6 +41,7 @@ public class Server {
 
         public void run() {
             try {
+                System.out.println("conn?");
                 // 读取客户端A数据
                 DataInputStream input = new DataInputStream(socket.getInputStream());
                 String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
