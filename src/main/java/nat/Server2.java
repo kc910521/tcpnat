@@ -53,22 +53,35 @@ public class Server2 {
                 socket.setKeepAlive(true);
                 ClientInfo clientInf = new ClientInfo(socket.getInetAddress().getHostAddress(),socket.getPort(),socket);
                 cinfs.add(clientInf);
-                DataInputStream input = new DataInputStream(socket.getInputStream());
-                String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
-                System.out.print("socket:"+socket.getInetAddress().getHostAddress()+":"+socket.getPort());
-                // 处理客户端数据
-                System.out.println("客户端发过来的内容:" + clientInputStr+";");
-//                String[] infs = clientInputStr.split(":");
-//                if (infs == null || infs.length != 2){
-//                    throw new Exception("ERROR INFORMATION."+ Arrays.toString(infs));
-//                }
-                //===向消息来源回复消息
-                DataOutputStream out2 = new DataOutputStream(socket.getOutputStream());
-                out2.writeUTF("ok");
+                for (int itm = 0;itm < 10; itm ++){
+                	System.out.println("itm:"+itm);
+                    DataInputStream input = new DataInputStream(socket.getInputStream());
+                    
+                    byte[] bt = new byte[2048];
+                    System.out.println("------------------------1------------");
+                    while (input.read(bt) == -1){
+                    	break;
+                    }
+                    String clientInputStr = new String(bt, "UTF-8");
+//                    String clientInputStr = input.readUTF();//这里要注意和客户端输出流的写方法对应,否则会抛 EOFException
+                    System.out.print("socket:"+socket.getInetAddress().getHostAddress()+":"+socket.getPort());
+                    
+                    
+                    
+                    // 处理客户端数据
+                    System.out.println("客户端发过来的内容:" + clientInputStr+";");
+//                    String[] infs = clientInputStr.split(":");
+//                    if (infs == null || infs.length != 2){
+//                        throw new Exception("ERROR INFORMATION."+ Arrays.toString(infs));
+//                    }
+                    //===向消息来源回复消息
+                    DataOutputStream out2 = new DataOutputStream(socket.getOutputStream());
+                    out2.writeUTF("ok");
 
-                // 向客户端B转发信息
-                for (ClientInfo ci: cinfs){
-                    sendMsg(ci,clientInputStr,clientInf);
+                    // 向客户端B转发信息
+                    for (ClientInfo ci: cinfs){
+                        sendMsg(ci,clientInputStr,clientInf);
+                    }
                 }
 //                socketC = new Socket(infs[0], Integer.valueOf(infs[1]));
 //                DataOutputStream out = new DataOutputStream(socketC.getOutputStream());
